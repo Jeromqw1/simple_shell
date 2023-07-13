@@ -12,5 +12,8 @@ git add .
 # Add a commit message
 git commit -m "$commit_message"
 
+# Get the name of the current branch
+current_branch=$(git symbolic-ref --short HEAD)
+
 # Push the changes to my repository
-git push origin master
+git push origin "$current_branch"

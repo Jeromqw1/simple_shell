@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change directory to my local Git repository
-cd /home/phaceless/alx-pre_course/simple_shell
+cd https://github.com/Jeromqw1/simple_shell
 
 # Add all changes to the staging area
 git add .

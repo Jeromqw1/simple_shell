@@ -6,22 +6,21 @@ void set_environment(vars_t *vars);
 void unset_environment(vars_t *vars);
 
 /**
- * *checks_for_builtins - checks if the command is a built-in shell command
+ *checks_for_builtins - checks if the command is a built-in shell command
  *@varas - variables struct
  *
  * Return - pointer to the finction or NULL
  * /
-
 void (*check_for_builtins(vars-t *vars))(vars_t *vars)
 {
-    unsigned int b;
-    builtins_t builtins[] = {
-    {"exit", exit_shell},
-    {"env", print_env};
-    {"setenv", set_environment};
-    {"unsetenv", unset_environment},
-    {NULL,NULL}
-  };
+   unsigned int b;
+   builtins_t builtins[] = {
+   {"exit", exit_shell},
+   {"env", print_env};
+   {"setenv", set_environment};
+   {"unsetenv", unset_environment},
+   {NULL,NULL}
+};
 
   for (b =0; builtins[b].f != NULL; b++)
   {
@@ -36,7 +35,7 @@ void (*check_for_builtins(vars-t *vars))(vars_t *vars)
 }
 
 /**
- *exit_shell - exist the shell
+ *exit_shell - exit the shell
  *@vars -variables sturct
  *
  * Return - void

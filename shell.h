@@ -13,9 +13,10 @@
 #include <errno.h>
 
 /* Read or Write buffer sizes */
-#define READ_BUF _SIZE(1024)
-#define WRITE_BUF _SIZE(1024)
-#define BUF _FLUSH(-1)
+#define WRITE_BUF_SIZE 1024
+#define BUF_FLUSH
+#define READ_BUT_SIZE 1024
+#define BUF_FLUSH_CHAR '\n'
 
 /* Command chaining types */
 #define CMD_NORM 0
@@ -51,7 +52,7 @@ typedef struct liststr
 
 /**
 * struct passinfo - Contains pseudo-arguments to pass into a function,
-*	allowing uniform prototype for function pointer struct
+* allowing uniform prototype for function pointer struct
 * @arg: A string generated from getline containing arguments
 * @argv: A string of strings generated from arg
 * @path: A string path for the current command
@@ -69,7 +70,8 @@ typedef struct liststr
 * @cmd_buf: Address of pointer to cmd_buf, set if chaning
 * @cmd_buf_type:Type of command chaining (CMD_type ||, &&, ;)
 * @readfd: The file descriptor from which to read line input
-* @histcount: The history line number count
+* @histcount: - The history line number count
+* @current_dir: it can store up to 1024 characters
 */
 
 typedef struct passinfo
@@ -89,6 +91,7 @@ typedef struct passinfo
 	int env_changed;
 	int status;
 
+	char current_dir[1024];
 	char **cmd_buf;
 	char cmd_buf_type;
 	int readfd;
@@ -115,6 +118,8 @@ int hsh(info_t *, char **);
 int find_builtin(info_t *);
 void find_cmd(info_t *);
 void fork_cmd(info_t *);
+int change_to_previous_directory(info_t *info, char *dir);
+void update_directory_info(info_t *info, char *buffer);
 
 int is_cmd(info_t *, char *);
 char *dup_chars(char *, int, int);
@@ -211,4 +216,9 @@ int replace_alias(info_t *);
 int replace_vars(info_t *);
 int replace_string(char **, char *);
 
+int change_to_previous_directory(info_t *info, char *dir);
+void update_directory_info(info_t *info, char *buffer);
+
+
 #endif /* _SHELL_H_ */
+

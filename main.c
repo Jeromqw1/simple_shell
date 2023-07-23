@@ -1,13 +1,13 @@
 #include "shell.h"
 
 /**
- * main - entry point of the custom shell program.
- * @arg_count: argument count to show number of arguments passed to program.
- * @arg_vector: array of strings containing the arguments passed to program.
+ * main - entry point of the custom shell program
+ * @arg_c: arg count to show number of arg passed to program
+ * @arg_v: array of strings containing the arg passed to program
  *
- * Return: 0 on successful execution, 1 on error.
+ * Return: 0 on successful execution, 1 on error
  */
-int main(int arg_count, char **arg_vector)
+int main(int arg_c, char **arg_v)
 {
 	CustomShellInfo shell_info[] = {SHELL_INFO_INIT};
 	int file_descriptor = 2;
@@ -19,9 +19,9 @@ int main(int arg_count, char **arg_vector)
 		: "r" (file_descriptor)
 	);
 
-	if (arg_count == 2)
+	if (arg_c == 2)
 	{
-		file_descriptor = open(arg_vector[1], O_RDONLY);
+		file_descriptor = open(arg_v[1], O_RDONLY);
 
 		if (file_descriptor == -1)
 		{
@@ -29,9 +29,9 @@ int main(int arg_count, char **arg_vector)
 				exit(126);
 			if (errno == ENOENT)
 			{
-				_eputs(arg_vector[0]);
+				_eputs(arg_v[0]);
 				_eputs(": 0: Can't open ");
-				_eputs(arg_vector[1]);
+				_eputs(arg_v[1]);
 				_eputchar('\n');
 				_eputchar(BUF_FLUSH);
 				exit(127);
@@ -44,7 +44,7 @@ int main(int arg_count, char **arg_vector)
 
 	populate_environment_list(shell_info);
 	read_command_history(shell_info);
-	custom_shell_main(shell_info, arg_vector);
+	custom_shell_main(shell_info, arg_v);
 
 	return (EXIT_SUCCESS);
 }

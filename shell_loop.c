@@ -1,24 +1,27 @@
 #include "shell.h"
 
 /**
- * hsh - Main shell loop.
- * @info: parameter & return info struct.
- * @av: argument vector from main().
+ * main_loop - main shell loop
  *
- * Return: 0 on success, 1 on error, or error code.
+ * @info: pointer to the parameter & return info struct
+ * @av: the argument vector from main()
+ *
+ * Return: 0 on success, 1 on error, or an error code
  */
-int hsh(info_t *info, char **av)
+int main_loop(info_t *info, char **av)
 {
-	ssize_t t = 0;
+	ssize_t read_result = 0;
 	int builtin_ret = 0;
 
-	while (t != -1 && builtin_ret != -2)
+	while (read_result != -1 && builtin_ret != -2)
 	{
 		clear_info(info);
-		print_prompt(info);
-		t = get_input(info);
+		if (interactive(info))
+			_puts("$ ");
+		_eputchar(BUF_FLUSH);
 
-		if (t != -1)
+		read_result = get_input(info);
+		if (read_result != -1)
 		{
 			set_info(info, av);
 			builtin_ret = find_builtin(info);
@@ -34,14 +37,25 @@ int hsh(info_t *info, char **av)
 
 	write_history(info);
 	free_info(info, 1);
-	check_and_exit(info, builtin_ret);
+
+	if (!interactive(info) && info->status)
+		exit(info->status);
+
+	if (builtin_ret == -2)
+	{
+		if (info->err_num == -1)
+			exit(info->status);
+
+		exit(info->err_num);
+	}
 
 	return (builtin_ret);
 }
 
 /**
- * find_builtin - finds a builtin command.
- * @info: the parameter & return info struct.
+ * find_builtin - finds a builtin command
+ *
+ * @info: pointer to the parameter & return info struct
  *
  * Return: -1 if builtin not found,
  *         0 if builtin executed successfully,
@@ -50,8 +64,7 @@ int hsh(info_t *info, char **av)
  */
 int find_builtin(info_t *info)
 {
-	int a, b = -1;
-
+	int u, builtin_ret = -1;
 	builtin_table builtintbl[] = {
 		{"exit", _myexit},
 		{"env", _myenv},
@@ -64,40 +77,46 @@ int find_builtin(info_t *info)
 		{NULL, NULL}
 	};
 
-	for (a = 0; builtintbl[a].type; a++)
+	for (u = 0; builtintbl[u].type; u++)
 	{
-		if (_strcmp(info->argv[0], builtintbl[a].type) == 0)
+		if (_strcmp(info->argv[0], builtintbl[u].type) == 0)
 		{
 			info->line_count++;
-			b = builtintbl[a].func(info);
+			builtin_ret = builtintbl[u].func(info);
 			break;
 		}
 	}
 
-	return (b);
+	return (builtin_ret);
 }
 
 /**
- * find_cmd - find command in PATH.
- * @info: parameter & return info struct.
+ * find_cmd - find a command in PATH
  *
- * Return: void.
+ * @info: pointer to the parameter & return info struct
+ *
+ * Return: void
  */
 void find_cmd(info_t *info)
 {
 	char *path = NULL;
-	int a, b;
+	int u, v;
 
 	info->path = info->argv[0];
-	check_linecount(info);
 
-	for (a = 0, b = 0; info->arg[a]; a++)
+	if (info->linecount_flag == 1)
 	{
-		if (!is_delim(info->arg[a], " \t\n"))
-			b++;
+		info->line_count++;
+		info->linecount_flag = 0;
 	}
 
-	if (!b)
+	for (u = 0, v = 0; info->arg[u]; u++)
+	{
+		if (!is_delim(info->arg[u], " \t\n"))
+			v++;
+	}
+
+	if (!v)
 		return;
 
 	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
@@ -109,10 +128,8 @@ void find_cmd(info_t *info)
 	}
 	else
 	{
-	if ((interactive(info) || _getenv(info, "PATH=") || info->argv[0][0] == '/')
-             && is_cmd(info, info->argv[0]))
-	
-	fork_cmd(info);
+		if ((interactive(info) || _getenv(info, "PATH=") || info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
+			fork_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
@@ -122,19 +139,20 @@ void find_cmd(info_t *info)
 }
 
 /**
- * fork_cmd - forks an exec thread to run cmd.
- * @info: parameter & return info struct.
+ * fork_cmd - forks an exec thread to run the command
  *
- * Return: void.
+ * @info: pointer to the parameter & return info struct
+ *
+ * Return: void
  */
 void fork_cmd(info_t *info)
 {
 	pid_t child_pid;
-
 	child_pid = fork();
 
 	if (child_pid == -1)
 	{
+		/* TODO: PUT ERROR FUNCTION */
 		perror("Error:");
 		return;
 	}
@@ -144,14 +162,12 @@ void fork_cmd(info_t *info)
 		if (execve(info->path, info->argv, get_environ(info)) == -1)
 		{
 			free_info(info, 1);
-
 			if (errno == EACCES)
 				exit(126);
-
 			exit(1);
 		}
+		/* TODO: PUT ERROR FUNCTION */
 	}
-
 	else
 	{
 		wait(&(info->status));

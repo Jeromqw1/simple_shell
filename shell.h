@@ -60,23 +60,23 @@ typedef struct liststr
 /**
 * struct passinfo - Contains pseudo-arguments to pass into a function,
 * allowing uniform prototype for function pointer struct
-* @arg: A string generated from getline containing arguments
+* @arg: a string generated from getline containing arguments
 * @argv: A string of strings generated from arg
 * @path: A string path for the current command
-* @argc: The argument count
+* @argc: argument count
 * @line_count: The error count
-* @err_num: The error code for exit() calls
+* @err_num: the error code for exit() calls
 * @linecount_flag: If set, count this line of input
 * @fname: The program filename
-* @env: Linked list local copy of environ
+* @env: linked list local copy of environ
 * @environ: Custom modified copy of the environ from LL env
 * @history: The history node
 * @alias: The alias node
 * @env_changed: Set to 1 if environ was changed
 * @status: The return status of the last executed command
-* @cmd_buf: Address of pointer to cmd_buf, set if chaning
+* @cmd_buf: address of pointer to cmd_buf, set if chaning
 * @cmd_buf_type:Type of command chaining (CMD_type ||, &&, ;)
-* @readfd: The file descriptor from which to read line input
+* @readfd: the file descriptor from which to read line input
 * @histcount: - The history line number count
 * @current_dir: it can store up to 1024 characters
 */
@@ -157,10 +157,10 @@ char **strtow(char *, char *);
 char **strtow2(char *, char);
 
 char *_memset(char *, char, unsigned int);
-void ffree(char **);
+void efree(char **);
 void *_realloc(void *, unsigned int, unsigned int);
 
-int bfree(void **);
+int ufree(void **);
 
 int interactive(info_t *);
 int is_delim(char, char *);

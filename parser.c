@@ -5,7 +5,7 @@
  * @info: pointer to the info struct
  * @path: path to the file
  *
- * Return: 1 if the file is executable command, 0 otherwise
+ * Return: 1 if the file is executabe command, 0 otherwise
  */
 int is_cmd(info_t *info, char *path)
 {
@@ -29,7 +29,7 @@ int is_cmd(info_t *info, char *path)
  * @start: starting index
  * @stop: stopping index
  *
- * Return: pointer to a new buffer of the replicated characters
+ * Return: pointer to new buffer of the replicated characters
  */
 char *dup_chars(char *pathstr, int start, int stop)
 {

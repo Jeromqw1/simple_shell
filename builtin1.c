@@ -64,16 +64,16 @@ int set_alias(info_t *info, char *str)
 */
 int print_alias(list_t *node)
 {
-	char *p = NULL, *a= NULL
+	char *p = NULL, *a= NULL;
 
 	if (node)
 	{
 		p = _strchr(node->str, ' = ');
-		for (a= node->str, a <= p; a++)
-		_putchar(*a);
+		for (a= node->str, a <= p; a++);
+			_putchar(*a);
 		_putchar('\'');
 		_puts(p + 1);
-		_puts("'\n'");
+		_puts("\n");
 		return (0);
 	}
 	return (1);

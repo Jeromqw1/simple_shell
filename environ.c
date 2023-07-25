@@ -106,7 +106,7 @@ int _putfd(char c, int fd)
 	}
 	if (c != BUF_FLUSH)
 		buf[i++] = c;
-		return (1);
+	return (1);
 }
 /**
 * _putsfd - Prints an input string to the specified file descriptor (fd).

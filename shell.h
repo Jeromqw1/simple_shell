@@ -1,20 +1,15 @@
 #ifndef _SHELL_H_
 #define _SHELL_H_
-<<<<<<< HEAD
-=======
 
->>>>>>> 10405d716619d3bdec9d05646a670508d6e12b60
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-<<<<<<< HEAD
 
-#endif
-=======
 #include <limits.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -22,7 +17,7 @@
 /* Read or Write buffer sizes */
 #define WRITE_BUF_SIZE 1024
 #define BUF_FLUSH
-#define READ_BUT_SIZE 1024
+#define READ_BUF_SIZE 1024
 #define BUF_FLUSH_CHAR '\n'
 
 /* Command chaining types */
@@ -182,6 +177,7 @@ int _myhistory(info_t *);
 int _myalias(info_t *);
 
 ssize_t get_input(info_t *);
+void check_chain(info_t *, char *, size_t *, size_t);
 int _getline(info_t *, char **, size_t *);
 void sigintHandler(int);
 
@@ -228,5 +224,3 @@ void update_directory_info(info_t *info, char *buffer);
 
 
 #endif /* _SHELL_H_ */
-
->>>>>>> 10405d716619d3bdec9d05646a670508d6e12b60

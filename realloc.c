@@ -19,10 +19,10 @@ char *_memset(char *s, char b, unsigned int n)
 }
 
 /**
- * ffree - free array of strings
+ * efree - the free array of strings
  * @bb: array of strings to free
  */
-void ffree(char **bb)
+void efree(char **bb)
 {
 	char **b = bb;
 
